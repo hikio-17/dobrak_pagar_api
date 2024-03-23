@@ -12,11 +12,14 @@ import { AuthService } from './auth.service';
 import { RegisterDto, RegisterResponseDto } from './dto/register.dto';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { AuthGuard } from './auth.guard';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiBody({ type: [LoginDto] })
   @Post()
   @HttpCode(HttpStatus.OK)
   async signin(@Body() body: LoginDto): Promise<LoginResponseDto> {
@@ -27,6 +30,7 @@ export class AuthController {
     };
   }
 
+  @ApiBody({ type: RegisterDto })
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() body: RegisterDto): Promise<RegisterResponseDto> {

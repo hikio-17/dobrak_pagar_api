@@ -43,7 +43,7 @@ model Article {
   id          Int        @id @default(autoincrement())  
   title       String
   published   Boolean    @default(false)
-  author      User       @relation(fields: [authorId], references: [id])
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    Int
   cover       String
   viewers     String
