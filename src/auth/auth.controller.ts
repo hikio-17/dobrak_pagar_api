@@ -19,7 +19,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiBody({ type: [LoginDto] })
+  @ApiBody({ type: LoginDto })
   @Post()
   @HttpCode(HttpStatus.OK)
   async signin(@Body() body: LoginDto): Promise<LoginResponseDto> {

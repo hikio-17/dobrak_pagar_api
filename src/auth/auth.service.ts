@@ -28,7 +28,7 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('Credential not valid');
 
-    const validPassword = this.comparePassword(
+    const validPassword = await this.comparePassword(
       credentials.password,
       user.password,
     );
