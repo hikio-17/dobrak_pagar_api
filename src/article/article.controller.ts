@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import {
@@ -25,18 +27,21 @@ import {
   UpdateArticleResponseDto,
 } from './dto/update.article.dto';
 import { DeleteArticleResponseDto } from './dto/delete.article.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('article')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
   @ApiBody({ type: CreateArticleDto })
+  @UseGuards(AuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createArticle(
     @Body() body: CreateArticleDto,
+    @Request() req,
   ): Promise<CreateArticleResponseDto> {
-    const article = await this.articleService.create(body);
+    const article = await this.articleService.create(body, req.user);
     return {
       status: 'success',
       message: 'article is created',
@@ -44,7 +49,7 @@ export class ArticleController {
     };
   }
 
-  //   @ApiBody({ type: GetAllArticleResponseDto })
+  @ApiBody({ type: GetAllArticleResponseDto })
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllArticle(): Promise<GetAllArticleResponseDto> {
@@ -56,7 +61,7 @@ export class ArticleController {
     };
   }
 
-  //   @ApiBody({ type: GetByIdArticleResponseDto })
+  @ApiBody({ type: GetByIdArticleResponseDto })
   @Get('/:articleId')
   @HttpCode(HttpStatus.OK)
   async getByIdArticle(
@@ -71,13 +76,15 @@ export class ArticleController {
   }
 
   @ApiBody({ type: UpdateArticleDto })
+  @UseGuards(AuthGuard)
   @Put('/:articleId')
   @HttpCode(HttpStatus.OK)
   async updateArticle(
     @Param('articleId', ParseIntPipe) articleId: number,
     @Body() body: UpdateArticleDto,
+    @Request() req,
   ): Promise<UpdateArticleResponseDto> {
-    const article = await this.articleService.update(articleId, body);
+    const article = await this.articleService.update(articleId, body, req.user);
     return {
       status: 'success',
       message: 'article is updated',
@@ -85,12 +92,14 @@ export class ArticleController {
     };
   }
 
+  @UseGuards(AuthGuard)
   @Delete('/:articleId')
   @HttpCode(HttpStatus.OK)
   async deleteArticle(
     @Param('articleId', ParseIntPipe) articleId: number,
+    @Request() req,
   ): Promise<DeleteArticleResponseDto> {
-    await this.articleService.deleteArticle(articleId);
+    await this.articleService.deleteArticle(articleId, req.user);
     return {
       data: true,
     };

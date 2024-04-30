@@ -5,20 +5,27 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto, webResponse } from './dto/create.category.dto';
 import { ApiBody } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('category')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
   @ApiBody({ type: CreateCategoryDto })
+  @UseGuards(AuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createArticle(@Body() body: CreateCategoryDto): Promise<webResponse> {
-    const category = await this.categoryService.createCategory(body);
+  async createArticle(
+    @Body() body: CreateCategoryDto,
+    @Request() req,
+  ): Promise<webResponse> {
+    const category = await this.categoryService.createCategory(body, req.user);
     return {
       status: 'success',
       message: 'category is created',
@@ -33,7 +40,7 @@ export class CategoryController {
 
     return {
       status: 'success',
-      message: 'get all articles',
+      message: 'get all category',
       data: category,
     };
   }

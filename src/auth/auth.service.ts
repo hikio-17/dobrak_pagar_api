@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from './../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
@@ -15,9 +15,12 @@ export class AuthService {
 
   async createUser(credentials: RegisterDto): Promise<User> {
     credentials.password = await this.hashPassword(credentials.password);
-
+    const role = credentials.role.toUpperCase();
     return this.prisma.user.create({
-      data: credentials,
+      data: {
+        ...credentials,
+        role: role as Role,
+      },
     });
   }
 

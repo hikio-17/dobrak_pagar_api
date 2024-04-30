@@ -13,6 +13,10 @@ export class CreateArticleDto {
 
   @ApiProperty()
   @IsString()
+  cover: string;
+
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   body: string;
 
