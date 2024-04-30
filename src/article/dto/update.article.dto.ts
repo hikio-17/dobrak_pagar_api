@@ -13,6 +13,10 @@ export class UpdateArticleDto {
 
   @ApiProperty()
   @IsString()
+  cover: string;
+
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   body: string;
 

@@ -13,6 +13,10 @@ export class RegisterDto {
 
   @ApiProperty()
   @IsString()
+  role: string;
+
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   @MinLength(6)
   password: string;
