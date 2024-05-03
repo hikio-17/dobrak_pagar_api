@@ -15,7 +15,10 @@ export class AuthService {
 
   async createUser(credentials: RegisterDto): Promise<User> {
     credentials.password = await this.hashPassword(credentials.password);
-    const role = credentials.role.toUpperCase();
+    let role;
+    if (credentials.role) {
+      role = credentials.role.toUpperCase();
+    }
     return this.prisma.user.create({
       data: {
         ...credentials,
